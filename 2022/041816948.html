@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="hive调优实战.md, Hexo">
-    <meta name="description" content="">
+    <meta name="keywords" content="hive调优实战.md, fyh&#39;s blog">
+    <meta name="description" content="本网站是个人兴趣爱好，总结分享经验，记录生活点滴的平台，希望在以后的学习旅途中，走出自己的风景。">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>hive调优实战.md | Hexo</title>
+    <title>hive调优实战.md | fyh&#39;s blog</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -43,7 +43,7 @@
                     
                     <img src="/medias/logo.png" class="logo-img" alt="LOGO">
                     
-                    <span class="logo-span">Hexo</span>
+                    <span class="logo-span">fyh&#39;s blog</span>
                 </a>
             </div>
             
@@ -142,10 +142,10 @@
         
         <img src="/medias/logo.png" class="logo-img circle responsive-img">
         
-        <div class="logo-name">Hexo</div>
+        <div class="logo-name">fyh&#39;s blog</div>
         <div class="logo-desc">
             
-            Never really desperate, only the lost of the soul.
+            本网站是个人兴趣爱好，总结分享经验，记录生活点滴的平台，希望在以后的学习旅途中，走出自己的风景。
             
         </div>
     </div>
@@ -429,9 +429,13 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/hive/">
+                                <span class="chip bg-color">hive</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -448,12 +452,27 @@
                 
 
                 
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2022-05-19
+                </div>
+                
 
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    856
+                </div>
                 
 
                 
 
                 
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
             </div>
         </div>
         <hr class="clearfix">
@@ -469,20 +488,20 @@
 <p>优点：减少频繁起停jvm的开销。</p>
 <p>缺点：任务全部完成，设置重用的task才会全部释放，如果单个任务执行较长，会导致资源占用。</p>
 <p>适用场景：任务数较多或者任务执行速度较快，会频繁起停jvm的任务。</p>
-<pre><code>set mapred.job.reuse.jvm.num.tasks=10;
+<pre class=" language-Linux"><code class="language-Linux">set mapred.job.reuse.jvm.num.tasks=10;
 </code></pre>
 <h2 id="文件压缩"><a href="#文件压缩" class="headerlink" title="文件压缩"></a>文件压缩</h2><p>是否选择文件压缩：<br>在hadoop作业执行过程中，job执行速度更多的是局限于I&#x2F;O，而不是受制于CPU。如果是这样，通过文件压缩可以提高hadoop性能。然而，如果作业的执行速度受限于CPU的性能，呢么压缩文件可能就不合适，因为文件的压缩和解压会花费掉较多的时间。当然确定适合集群最优配置的最好方式是通过实验测试，然后衡量结果。</p>
 <h3 id="中间压缩"><a href="#中间压缩" class="headerlink" title="中间压缩"></a>中间压缩</h3><p>中间压缩就是处理作业map任务和reduce任务之间的数据，对于中间压缩，最好选择一个节省CPU耗时的压缩方式。</p>
-<pre><code>set hive.exec.compress.intermediate = true;
+<pre class=" language-Linux"><code class="language-Linux">set hive.exec.compress.intermediate = true;
 set mapred.output.compression.codec = org.apache.hadoop.io.compress.SnappyCodec;
 </code></pre>
 <h3 id="最终的压缩输出"><a href="#最终的压缩输出" class="headerlink" title="最终的压缩输出"></a>最终的压缩输出</h3><p>作业最终的输出可以压缩。</p>
-<pre><code>set hive.exec.compress.output = true;
+<pre class=" language-Linux"><code class="language-Linux">set hive.exec.compress.output = true;
 set mapred.output.compression.codec = org.apache.hadoop.io.compress.SnappyCodec;
 </code></pre>
 <h2 id="设置切片大小"><a href="#设置切片大小" class="headerlink" title="设置切片大小"></a>设置切片大小</h2><p>mapreduce根据切片启动map任务，一个切片启动一个map读取。</p>
-<pre><code> // 计算切片大小
- computeSplitSize(Math.max(&quot;mapred.min.split.size&quot;,min(&quot;mapred.max.split.size&quot;,blockSize)))=blockSize=128M(默认)
+<pre class=" language-Linux"><code class="language-Linux"> // 计算切片大小
+ computeSplitSize(Math.max("mapred.min.split.size",min("mapred.max.split.size",blockSize)))=blockSize=128M(默认)
 </code></pre>
 <p>切片原理：</p>
 <ul>
@@ -495,13 +514,13 @@ set mapred.output.compression.codec = org.apache.hadoop.io.compress.SnappyCodec;
 <li>小文件数量过多，设置虚拟切片大小，用于合并小文件，减少map数量。</li>
 <li>在文件支持切割的情况下(有的压缩格式不支持切割，如gzip)，设置mapred.max.split.size小于blocksize可以增多map数量，减少每个map处理的数据量，不容易出现oom。</li>
 </ul>
-<pre><code>// hive设置如下，单位byte
+<pre class=" language-Linux"><code class="language-Linux">// hive设置如下，单位byte
 set mapred.max.split.size=50000000;
 set mapred.min.split.size.per.rack=1;
 set mapred.min.split.size.per.node=1;
 </code></pre>
 <h2 id="开启本地Mr模式"><a href="#开启本地Mr模式" class="headerlink" title="开启本地Mr模式"></a>开启本地Mr模式</h2><p>大多数的Hadoop Job是需要Hadoop提供的完整的可扩展性来处理大数据集的。不过，有时Hive的输入数据量是非常小的。在这种情况下，为查询触发执行任务时消耗可能会比实际job的执行时间要多的多。对于大多数这种情况，Hive可以通过本地模式在单台机器上处理所有的任务。对于小数据集，执行时间可以明显被缩短。</p>
-<pre><code> (1)开启本地mr
+<pre class=" language-Linux"><code class="language-Linux"> (1)开启本地mr
  set hive.exec.mode.local.auto=true;
  (2)设置local mr的最大输入数据量,当输入数据量小于这个值的时候会采用local mr的方式
  set hive.exec.mode.local.auto.inputbytes.max=50000000;
@@ -525,7 +544,7 @@ set mapred.min.split.size.per.node=1;
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="/about" rel="external nofollow noreferrer">John Doe</a>
+                    <a href="/about" rel="external nofollow noreferrer">fyh</a>
                 </span>
             </div>
             <div class="reprint__type">
@@ -548,7 +567,7 @@ set mapred.min.split.size.per.node=1;
                     本博客所有文章除特別声明外，均采用
                     <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
                     许可协议。转载请注明来源
-                    <a href="/about" target="_blank">John Doe</a>
+                    <a href="/about" target="_blank">fyh</a>
                     !
                 </span>
             </div>
@@ -572,7 +591,11 @@ set mapred.min.split.size.per.node=1;
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/hive/">
+                                    <span class="chip bg-color">hive</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -581,9 +604,6 @@ set mapred.min.split.size.per.node=1;
 <div id="article-share">
 
     
-    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
-    <script src="/libs/share/js/social-share.min.js"></script>
-    
 
     
 
@@ -591,132 +611,6 @@ set mapred.min.split.size.per.node=1;
 
                 </div>
             </div>
-            
-                <style>
-    #reward {
-        margin: 40px 0;
-        text-align: center;
-    }
-
-    #reward .reward-link {
-        font-size: 1.4rem;
-        line-height: 38px;
-    }
-
-    #reward .btn-floating:hover {
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    #rewardModal {
-        width: 320px;
-        height: 350px;
-    }
-
-    #rewardModal .reward-title {
-        margin: 15px auto;
-        padding-bottom: 5px;
-    }
-
-    #rewardModal .modal-content {
-        padding: 10px;
-    }
-
-    #rewardModal .close {
-        position: absolute;
-        right: 15px;
-        top: 15px;
-        color: rgba(0, 0, 0, 0.5);
-        font-size: 1.3rem;
-        line-height: 20px;
-        cursor: pointer;
-    }
-
-    #rewardModal .close:hover {
-        color: #ef5350;
-        transform: scale(1.3);
-        -moz-transform:scale(1.3);
-        -webkit-transform:scale(1.3);
-        -o-transform:scale(1.3);
-    }
-
-    #rewardModal .reward-tabs {
-        margin: 0 auto;
-        width: 210px;
-    }
-
-    .reward-tabs .tabs {
-        height: 38px;
-        margin: 10px auto;
-        padding-left: 0;
-    }
-
-    .reward-content ul {
-        padding-left: 0 !important;
-    }
-
-    .reward-tabs .tabs .tab {
-        height: 38px;
-        line-height: 38px;
-    }
-
-    .reward-tabs .tab a {
-        color: #fff;
-        background-color: #ccc;
-    }
-
-    .reward-tabs .tab a:hover {
-        background-color: #ccc;
-        color: #fff;
-    }
-
-    .reward-tabs .wechat-tab .active {
-        color: #fff !important;
-        background-color: #22AB38 !important;
-    }
-
-    .reward-tabs .alipay-tab .active {
-        color: #fff !important;
-        background-color: #019FE8 !important;
-    }
-
-    .reward-tabs .reward-img {
-        width: 210px;
-        height: 210px;
-    }
-</style>
-
-<div id="reward">
-    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
-
-    <!-- Modal Structure -->
-    <div id="rewardModal" class="modal">
-        <div class="modal-content">
-            <a class="close modal-close"><i class="fas fa-times"></i></a>
-            <h4 class="reward-title">你的赏识是我前进的动力</h4>
-            <div class="reward-content">
-                <div class="reward-tabs">
-                    <ul class="tabs row">
-                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
-                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
-                    </ul>
-                    <div id="alipay">
-                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
-                    </div>
-                    <div id="wechat">
-                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    $(function () {
-        $('.tabs').tabs();
-    });
-</script>
-
             
         </div>
     </div>
@@ -766,10 +660,18 @@ set mapred.min.split.size.per.node=1;
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
-                            John Doe
+                            fyh
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/kerberos/">
+                        <span class="chip bg-color">kerberos</span>
+                    </a>
+                    
                 </div>
                 
             </div>
@@ -803,10 +705,18 @@ set mapred.min.split.size.per.node=1;
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
-                            John Doe
+                            fyh
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/yarn/">
+                        <span class="chip bg-color">yarn</span>
+                    </a>
+                    
                 </div>
                 
             </div>
@@ -998,13 +908,16 @@ set mapred.min.split.size.per.node=1;
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
             
-                <span id="year">2019-2022</span>
+                <span id="year">2022</span>
             
-            <span id="year">2019</span>
-            <a href="/about" target="_blank">John Doe</a>
+            <span id="year">2022</span>
+            <a href="/about" target="_blank">fyh</a>
             |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
             |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
             <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">4.2k</span>&nbsp;字
             
             
             
@@ -1028,13 +941,13 @@ set mapred.min.split.size.per.node=1;
             
         </div>
         <div class="col s12 m4 l4 social-link social-statis">
-    <a href="https://github.com/blinkfox" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+    <a href="https://github.com/MeetFengyh?tab=projects" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
         <i class="fab fa-github"></i>
     </a>
 
 
 
-    <a href="mailto:1181062873@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+    <a href="mailto:meetfengyh@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
         <i class="fas fa-envelope-open"></i>
     </a>
 
@@ -1044,7 +957,7 @@ set mapred.min.split.size.per.node=1;
 
 
 
-    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1181062873" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 1181062873" data-position="top" data-delay="50">
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=757091969" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 757091969" data-position="top" data-delay="50">
         <i class="fab fa-qq"></i>
     </a>
 
